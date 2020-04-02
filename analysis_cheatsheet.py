@@ -51,6 +51,18 @@ def impute_age(cols):
 ## drop rows with missing values in a column named Cabin
 train.drop('Cabin',axis=1,inplace=True)
 
+## Standardising data 
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+### drop the target variable
+scaler.fit(dataframe_name.drop('TARGET CLASS',axis=1))
+### scaled and transform the variables
+scaled_features = scaler.transform(dataframe_name.drop('TARGET CLASS',axis=1))
+#### create new feature data frame
+df_feat = pd.DataFrame(scaled_features,columns=df.columns[:-1])
+df_feat.head()
+
+
 ## Converting Categorical features
 #### use pd.get_dummies()
 ##### drop_first parameter will drop a variable to avoid multi-collinearity 
@@ -64,6 +76,9 @@ train.drop(['Sex','Embarked','Name','Ticket'],axis=1,inplace=True)
 #add the new dummy vars to the existing 
 train = pd.concat([train,sex,embark],axis=1)
 
+### merge dataframes
+df = pd.merge(df, movie_titles, on ='item_id')
+
 -----------------------------------------------
 
 #Build a logistic regression model
@@ -71,12 +86,10 @@ train = pd.concat([train,sex,embark],axis=1)
 from sklearn.model_selection import train_test_split
 
 ####separate the explanatory variables with the predictor 
-X = train.drop('Survived', axis=1)
-y = train['Survived']
+X = final_data.drop('not.fully.paid', axis = 1)
+Y = final_data['not.fully.paid']
+X_train, Y_train, X_test, Y_test = train_test_split(X, Y, test_size = 0.3)
 
-###split the dataset
-X_train, X_test, y_train, y_test = train_test_split(train.drop('Survived',axis=1), train['Survived'], test_size=0.30, 
-                                                    random_state=101)
 
 ## Training and Predicting 
 from sklearn.linear_model import LogisticRegression
