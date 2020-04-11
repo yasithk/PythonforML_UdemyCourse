@@ -23,8 +23,17 @@ sns.countplot(x='variable1',data=dataframe_name,palette='RdBu_r')
 ## Countplots
 sns.Countplot(x = 'variable1', hue = 'variable2', data = dataframe_name, palette='rainbow' )
 
+### describe with groupby 
+messages.groupby('label').describe()
+
+### print the entire values of a cell usig iloc
+messages[messages['length']== 910]['message'].iloc[0]
 
 #Data Cleansing
+
+## check for missing data
+#### count for NULL values per variable
+df.isnull().sum()
 
 ## filling in missing data
 ### impute average age per group, define a function then apply over a dataset
@@ -50,6 +59,16 @@ def impute_age(cols):
 
 ## drop rows with missing values in a column named Cabin
 train.drop('Cabin',axis=1,inplace=True)
+
+
+## Convert datetime variable. Convert a string into a datetime object
+df['date'] = pd.to_datetime(df['date'])
+df['date'].head()
+
+## grab the year, month of the date
+df['year'] = df['date'].apply(lambda date: date.year)
+df['month'] = df['date'].apply(lambda date: date.month)
+df.head()
 
 ## Standardising data 
 from sklearn.preprocessing import StandardScaler
@@ -78,6 +97,12 @@ train = pd.concat([train,sex,embark],axis=1)
 
 ### merge dataframes
 df = pd.merge(df, movie_titles, on ='item_id')
+
+#group by and sort
+df.groupby('title')['rating'].mean().sort_values(ascending=False).head()
+
+#user pivot_Tablt to get into matrix form
+moviemat = df.pivot_table(index= 'user_id', columns='title', values = 'rating')
 
 -----------------------------------------------
 
